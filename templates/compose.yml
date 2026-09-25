@@ -4,7 +4,7 @@ services:
     image: traefik/whoami:v1.10          # CHANGE: your image, pinned version
     env_file: .env
     ports:
-      - "8080:80"                        # CHANGE: host:container
+      - "10000:80"                       # CHANGE: host:container (claim next free slot from 10000, +10 per service)
     volumes:
       - ./data:/data                     # CHANGE: container path the app writes to
     restart: unless-stopped

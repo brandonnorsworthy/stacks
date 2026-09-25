@@ -19,6 +19,12 @@ Rules for AI agents (and humans) working in this repo.
 - Pin image versions — no `latest`.
 - `.env.example` holds placeholders only; `.env` is never committed (keep it out of git, e.g. via `.gitignore`).
 
+## Port allocation
+
+- Well-known app ports are fine (e.g. Minecraft `25565`, Palworld `8211`).
+- Anything that doesn't truly need a default port gets allocated from the managed range starting at `10000`, incrementing by `10` per reserved service: `10000`, `10010`, `10020`, … (allows up to 10 services per stack to share a host port block if needed).
+- When adding a new compose file or container, claim the next free slot in that sequence and record the allocation in the stack's `README.md` so ports stay easy to manage and never collide.
+
 ## Security
 
 - No image may be built with baked-in production env settings (secrets, API keys, DSNs) that create security vulnerabilities; env must come from the host at runtime.
