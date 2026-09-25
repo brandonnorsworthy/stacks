@@ -10,6 +10,15 @@ Rules for AI agents (and humans) working in this repo.
   - well-maintained open source images (e.g. `itzg/minecraft`, palworld, valheim, `postgres`, `redis`), or
   - personal images pushed to Docker Hub or GHCR via a public GitHub Action `docker build`.
 
+## New stacks
+
+- Create new stacks from the central template at `templates/` (`docker-compose.yml` + `.env.example`); change the values marked `CHANGE`.
+- Always set `mem_limit` and `cpus`.
+- Persistent data goes in `./data`; named volumes are fine for databases.
+- No `networks:` unless the app needs the database or LLM network.
+- Pin image versions — no `latest`.
+- `.env.example` holds placeholders only; `.env` is never committed (keep it out of git, e.g. via `.gitignore`).
+
 ## Security
 
 - No image may be built with baked-in production env settings (secrets, API keys, DSNs) that create security vulnerabilities; env must come from the host at runtime.

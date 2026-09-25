@@ -31,12 +31,44 @@ Every stack in this repo:
 
 These rules are enforced for AI agents via [AGENTS.md](AGENTS.md).
 
+## New stacks
+
+Start every new stack from the central template in [templates/](templates/) (`docker-compose.yml` + `.env.example`) and change the values marked `CHANGE`. Rules:
+
+- Always set `mem_limit` and `cpus`.
+- Persistent data goes in `./data`. Named volumes are fine for databases.
+- No `networks:` unless the app needs the database or LLM network.
+- Pin image versions.
+- `.env.example` holds placeholders only; copy to `.env`, which is never committed.
+
+## Environment variables: `.env.example` and `.env`
+
+Every stack has an `.env.example` committed to git. It documents which environment variables the stack needs (names and what they mean) using placeholder values — it is **never** the actual secret values.
+
+The real values live in a `.env` file in the same folder. `.env` is gitignored, so it never touches this repo. It is what the container actually reads (via `env_file: .env` in `docker-compose.yml`) and what gets provisioned on the server (e.g. by Arcane or by setting it manually via the dashboard/monitor tooling).
+
+Workflow when a stack needs new/changed variables:
+
+1. Add or update the variable name in `.env.example` (with a `changeme`-style placeholder).
+2. Copy the variable to the server's `.env` for that stack and put in the real value.
+3. Restart the stack (Arcane or `docker compose up -d`).
+
+This keeps secrets out of git while still keeping a single source of truth for *which* variables every stack expects.
+
+## Deployment
+
+This repo is cloned onto my home-lab Ubuntu server at `/srv/stacks`. Arcane watches the repo and handles running the stacks — deploys, restarts, scaling — so there's no manual `docker compose up -d` SSH work.
+
 ## Layout
 
 ```
 stacks/
+├── templates/           # central docker-compose template for new stacks
 ├── <stack>/
 │   ├── docker-compose.yml
+│   ├── .env.example     # placeholders only (committed)
+│   ├── .env             # real values (NEVER committed)
+│   ├── data/            # persistent data
 │   └── README.md        # per-stack notes (ports, gotchas)
 └── docs/                # general docs, runbooks, server info
 ```

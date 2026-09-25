@@ -1,0 +1,13 @@
+services:
+  app:                                   # CHANGE: service name
+    container_name: app                  # CHANGE: must be unique on the server
+    image: traefik/whoami:v1.10          # CHANGE: your image, pinned version
+    env_file: .env
+    ports:
+      - "8080:80"                        # CHANGE: host:container
+    volumes:
+      - ./data:/data                     # CHANGE: container path the app writes to
+    restart: unless-stopped
+    stop_grace_period: 30s
+    mem_limit: 512m                      # CHANGE: size to the app
+    cpus: 0.5                            # CHANGE: size to the app
