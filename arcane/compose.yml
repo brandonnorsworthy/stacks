@@ -8,6 +8,8 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./data:/app/data
+      # PROJECTS_DIRECTORY paths must match inside and outside the container:
+      - /srv/stacks:/srv/stacks
     # host cgroup namespace so Arcane can detect its own container ID (self-upgrades)
     cgroup: host
     restart: unless-stopped

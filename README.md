@@ -24,7 +24,7 @@ Supersedes the previous (manual) management repos:
 
 Every stack in this repo:
 
-- Runs as its own dedicated UID (not shared with other stacks), with no dedicated group — just the system "nogroup"/"nobody" GID, e.g. `user: "10001:65534"` in `compose.yml`.
+- Runs as its own dedicated UID (not shared with other stacks), with no dedicated group — just the system "nogroup"/"nobody" GID, e.g. `user: "10002:65534"` in `compose.yml`. UID allocation: `10001` is reserved for the Arcane manager, app stacks start at `10002` (record each in the stack's README).
 - Is scoped to its own stack folder on the host, so a compromised container or user can't escape to other stacks or paths.
 - Uses either well-maintained open source images (e.g. `itzg/minecraft`, palworld, valheim, `postgres`, `redis`) or personal images published to Docker Hub / GHCR via a public GitHub Action `docker build`.
 - Never bakes production env settings (secrets, API keys, DSNs) into the image or compose file — env comes from the host at runtime. If a stack or image is found with baked-in credentials or other dangerous defaults, say so immediately.

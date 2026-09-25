@@ -41,3 +41,5 @@ Arcane Docker manager. Web UI on port 3552, manages Docker via the host socket.
 - `cgroup: host` is required for container-ID detection / self-upgrades.
 - `ENCRYPTION_KEY` is stored in `.env` (untracked); losing it locks the Arcane database.
 - `./data/:/app/data` holds the Arcane DB and project metadata — back it up.
+- Project management requires matched absolute paths, hence the `/srv/stacks:/srv/stacks` mount + `PROJECTS_DIRECTORY=/srv/stacks`.
+- **Security:** Arcane's `PUID` only governs files *Arcane itself* creates — the stacks it manages run as whatever their own compose files say. Because Arcane holds the Docker socket (root-equivalent), `PUID` scoping does not protect Arcane itself: keep port `3552` off the public internet (VPN/Tailscale only) and guard `ENCRYPTION_KEY`.

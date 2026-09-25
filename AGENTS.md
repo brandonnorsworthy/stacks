@@ -5,6 +5,7 @@ Rules for AI agents (and humans) working in this repo.
 ## Stack requirements
 
 - Each stack MUST run as its own individual, dedicated UID (not shared with other stacks). No dedicated group is needed — use the system "nogroup" GID (e.g. `65534`, the Linux nobody group), e.g. `user: "10001:65534"`.
+- UID allocation: `10001` is reserved for the Arcane manager stack. App stacks start at `10002` and each increment by 1; record each allocation in the stack's `README.md`.
 - The host user owning that stack MUST be scoped to that stack's folder (e.g. via ACLs or `subuid/subgid` + restricted volume mounts) so a compromised container or user cannot escape to other stacks or paths.
 - Stacks may reference:
   - well-maintained open source images (e.g. `itzg/minecraft`, palworld, valheim, `postgres`, `redis`), or
@@ -18,3 +19,4 @@ Create new stacks from the central template at [`templates/`](templates/README.m
 
 - No image may be built with baked-in production env settings (secrets, API keys, DSNs) that create security vulnerabilities; env must come from the host at runtime.
 - If an existing stack or image is found with baked-in credentials or other dangerous defaults, **mention it immediately** — do not silently leave it alone.
+- The Arcane manager holds `/var/run/docker.sock`, which is root-equivalent over Docker: per-stack UID scoping does NOT protect Arcane itself. Keep the Arcane UI port off the public internet (VPN/Tailscale only) and treat `ENCRYPTION_KEY` as a root-level secret.
