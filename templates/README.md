@@ -1,6 +1,6 @@
 # Docker Compose Template
 
-Copy this folder's `docker-compose.yml` and `.env.example` for every new stack and change the values marked `CHANGE`.
+Copy this folder's `compose.yml` and `.env.example` for every new stack and change the values marked `CHANGE`.
 
 ## Rules
 

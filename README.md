@@ -6,7 +6,7 @@ Docker Compose stacks and docs for my homelab containers, managed with [Arcane](
 
 Central place for everything related to running containers on my server:
 
-- `docker-compose.yml` files (one per stack/service)
+- `compose.yml` files (one per stack/service)
 - Docs: notes on configuration, setup, and any gotchas
 
 ## Why
@@ -24,7 +24,7 @@ Supersedes the previous (manual) management repos:
 
 Every stack in this repo:
 
-- Runs as its own dedicated UID (not shared with other stacks), with no dedicated group — just the system "nogroup"/"nobody" GID, e.g. `user: "10001:65534"` in `docker-compose.yml`.
+- Runs as its own dedicated UID (not shared with other stacks), with no dedicated group — just the system "nogroup"/"nobody" GID, e.g. `user: "10001:65534"` in `compose.yml`.
 - Is scoped to its own stack folder on the host, so a compromised container or user can't escape to other stacks or paths.
 - Uses either well-maintained open source images (e.g. `itzg/minecraft`, palworld, valheim, `postgres`, `redis`) or personal images published to Docker Hub / GHCR via a public GitHub Action `docker build`.
 - Never bakes production env settings (secrets, API keys, DSNs) into the image or compose file — env comes from the host at runtime. If a stack or image is found with baked-in credentials or other dangerous defaults, say so immediately.
@@ -33,7 +33,7 @@ These rules are enforced for AI agents via [AGENTS.md](AGENTS.md).
 
 ## New stacks
 
-Start every new stack from the central template in [templates/](templates/) (`docker-compose.yml` + `.env.example`) and change the values marked `CHANGE`. Rules:
+Start every new stack from the central template in [templates/](templates/) (`compose.yml` + `.env.example`) and change the values marked `CHANGE`. Rules:
 
 - Always set `mem_limit` and `cpus`.
 - Persistent data goes in `./data`. Named volumes are fine for databases.
@@ -45,7 +45,7 @@ Start every new stack from the central template in [templates/](templates/) (`do
 
 Every stack has an `.env.example` committed to git. It documents which environment variables the stack needs (names and what they mean) using placeholder values — it is **never** the actual secret values.
 
-The real values live in a `.env` file in the same folder. `.env` is gitignored, so it never touches this repo. It is what the container actually reads (via `env_file: .env` in `docker-compose.yml`) and what gets provisioned on the server (e.g. by Arcane or by setting it manually via the dashboard/monitor tooling).
+The real values live in a `.env` file in the same folder. `.env` is gitignored, so it never touches this repo. It is what the container actually reads (via `env_file: .env` in `compose.yml`) and what gets provisioned on the server (e.g. by Arcane or by setting it manually via the dashboard/monitor tooling).
 
 Workflow when a stack needs new/changed variables:
 
@@ -63,9 +63,9 @@ This repo is cloned onto my home-lab Ubuntu server at `/srv/stacks`. Arcane watc
 
 ```
 stacks/
-├── templates/           # central docker-compose template for new stacks
+├── templates/           # central compose template for new stacks
 ├── <stack>/
-│   ├── docker-compose.yml
+│   ├── compose.yml
 │   ├── .env.example     # placeholders only (committed)
 │   ├── .env             # real values (NEVER committed)
 │   ├── data/            # persistent data

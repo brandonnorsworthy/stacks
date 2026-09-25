@@ -12,7 +12,7 @@ Rules for AI agents (and humans) working in this repo.
 
 ## New stacks
 
-- Create new stacks from the central template at `templates/` (`docker-compose.yml` + `.env.example`); change the values marked `CHANGE`.
+- Create new stacks from the central template at `templates/` (`compose.yml` + `.env.example`); change the values marked `CHANGE`.
 - Always set `mem_limit` and `cpus`.
 - Persistent data goes in `./data`; named volumes are fine for databases.
 - No `networks:` unless the app needs the database or LLM network.
