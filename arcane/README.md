@@ -1,8 +1,9 @@
 # arcane
 
-Arcane Docker manager. Web UI on port 3552, manages Docker via the host socket.
+Arcane Docker manager. Web UI on host port `10000` (container 3552, Arcane's native port), manages Docker via the host socket.
 
 - Image: `ghcr.io/getarcaneapp/manager:v1.19.4` (pinned)
+- Port: host `10000` → container `3552` (recorded per the managed allocation scheme; first claimed slot)
 - UID/GID: `10001:65534` (dedicated stack UID / nogroup). Arcane's image entrypoint starts as root to prepare then drops to `PUID:PGID`, so `PUID=10001` is what enforces the dedicated UID (setting compose `user:` would skip the entrypoint).
 
 ## First-time setup
@@ -48,4 +49,4 @@ Arcane Docker manager. Web UI on port 3552, manages Docker via the host socket.
 - `ENCRYPTION_KEY` is stored in `.env` (untracked); losing it locks the Arcane database.
 - `./data/:/app/data` holds the Arcane DB and project metadata — back it up.
 - Project management requires matched absolute paths, hence the `/srv/stacks:/srv/stacks` mount + `PROJECTS_DIRECTORY=/srv/stacks`.
-- **Security:** Arcane's `PUID` only governs files *Arcane itself* creates — the stacks it manages run as whatever their own compose files say. Because Arcane holds the Docker socket (root-equivalent), `PUID` scoping does not protect Arcane itself: keep port `3552` off the public internet (VPN/Tailscale only) and guard `ENCRYPTION_KEY`.
+- **Security:** Arcane's `PUID` only governs files *Arcane itself* creates — the stacks it manages run as whatever their own compose files say. Because Arcane holds the Docker socket (root-equivalent), `PUID` scoping does not protect Arcane itself: keep host port `10000` off the public internet (VPN/Tailscale only) and guard `ENCRYPTION_KEY`.

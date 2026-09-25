@@ -19,4 +19,3 @@ Create new stacks from the central template at [`templates/`](templates/README.m
 
 - No image may be built with baked-in production env settings (secrets, API keys, DSNs) that create security vulnerabilities; env must come from the host at runtime.
 - If an existing stack or image is found with baked-in credentials or other dangerous defaults, **mention it immediately** — do not silently leave it alone.
-- The Arcane manager holds `/var/run/docker.sock`, which is root-equivalent over Docker: per-stack UID scoping does NOT protect Arcane itself. Keep the Arcane UI port off the public internet (VPN/Tailscale only) and treat `ENCRYPTION_KEY` as a root-level secret.
