@@ -1,0 +1,9 @@
+# Laptop/dev override — server path is /srv/stacks (see compose.yml).
+# Usage: docker compose -f compose.yml -f compose.dev.yml up -d
+services:
+  arcane:
+    environment:
+      # Must match the host-side mount below (same absolute path inside & out)
+      PROJECTS_DIRECTORY: /var/home/brandon/dev/stacks
+    volumes:
+      - /var/home/brandon/dev/stacks:/var/home/brandon/dev/stacks

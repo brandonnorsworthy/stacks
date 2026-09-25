@@ -18,23 +18,29 @@ Arcane Docker manager. Web UI on port 3552, manages Docker via the host socket.
 
 3. Own the data dir as the stack UID:
 
-   ```sh
-   sudo chown 10001:65534 data
-   ```
+    ```sh
+    sudo chown 10001:65534 data
+    ```
+
+    (On the laptop, use the local clone path for the data dir and skip the next step until you're ready to try the socket.)
 
 4. Allow the stack UID to use the Docker socket (socket is root:docker 0660):
 
-   ```sh
-   sudo setfacl -m u:10001:rw /var/run/docker.sock
-   ```
+    ```sh
+    sudo setfacl -m u:10001:rw /var/run/docker.sock
+    ```
 
-   (ACLs persist across socket recreation only if Docker's daemon is configured to keep the socket; re-run after a Docker daemon reinstall/upgrade.)
+    (ACLs persist across socket recreation only if Docker's daemon is configured to keep the socket; re-run after a Docker daemon reinstall/upgrade.)
 
-5. Start:
+5. Start (on the server the repo lives at `/srv/stacks`; on the laptop use `compose.dev.yml`, which remounts the project at the local clone path and overrides `PROJECTS_DIRECTORY`):
 
-   ```sh
-   docker compose up -d
-   ```
+    ```sh
+    # server
+    docker compose up -d
+
+    # laptop / dev
+    docker compose -f compose.yml -f compose.dev.yml up -d
+    ```
 
 ## Notes
 
