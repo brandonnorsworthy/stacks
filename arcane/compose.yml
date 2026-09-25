@@ -12,13 +12,13 @@ services:
       - /srv/stacks:/srv/stacks
     # host cgroup namespace so Arcane can detect its own container ID (self-upgrades)
     cgroup: host
-    restart: unless-stopped
-    stop_grace_period: 30s
-    mem_limit: 512m
-    cpus: 1.0
     healthcheck:
       test: ['CMD', './arcane', 'health', '--timeout', '2s']
       interval: 10s
       timeout: 3s
       retries: 5
       start_period: 15s
+    restart: unless-stopped
+    stop_grace_period: 30s
+    mem_limit: 512m
+    cpus: 1.0

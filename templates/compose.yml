@@ -7,6 +7,12 @@ services:
       - "10000:80"                       # CHANGE: host:container (claim next free slot from 10000, +10 per service)
     volumes:
       - ./data:/data                     # CHANGE: container path the app writes to
+    healthcheck:                         # CHANGE: placeholder example of a health check for the app
+      test: ['CMD', 'curl', '-f', 'http://localhost:80/']
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 15s
     restart: unless-stopped
     stop_grace_period: 30s
     mem_limit: 512m                      # CHANGE: size to the app

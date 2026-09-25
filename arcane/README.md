@@ -25,7 +25,14 @@ Arcane Docker manager. Web UI on host port `10000` (container 3552, Arcane's nat
 
     (On the laptop, use the local clone path for the data dir and skip the next step until you're ready to try the socket.)
 
-4. Allow the stack UID to use the Docker socket (socket is root:docker 0660):
+4. Allow the stack UID to use the Docker socket (socket is root:docker 0660). Recommended: create a stub user at that UID and add it to the docker group (survives socket recreation):
+
+    ```sh
+    sudo useradd -u 10001 -g nogroup -M -d /nonexistent -s /usr/sbin/nologin arcane
+    sudo usermod -aG docker arcane
+    ```
+
+    Alternative: grant an ACL directly (requires `sudo apt install acl`):
 
     ```sh
     sudo setfacl -m u:10001:rw /var/run/docker.sock
