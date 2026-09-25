@@ -23,7 +23,7 @@ Arcane Docker manager. Web UI on host port `10000` (container 3552, Arcane's nat
     sudo chown 10001:65534 data
     ```
 
-    (On the laptop, use the local clone path for the data dir and skip the next step until you're ready to try the socket.)
+    (On a local/dev machine, use the local clone path for the data dir and skip the next step until you're ready to try the socket.)
 
 4. Allow the stack UID to use the Docker socket (socket is root:docker 0660). Recommended: create a stub user at that UID and add it to the docker group (survives socket recreation):
 
@@ -40,13 +40,13 @@ Arcane Docker manager. Web UI on host port `10000` (container 3552, Arcane's nat
 
     (ACLs persist across socket recreation only if Docker's daemon is configured to keep the socket; re-run after a Docker daemon reinstall/upgrade.)
 
-5. Start (on the server the repo lives at `/srv/stacks`; on the laptop use `compose.dev.yml`, which remounts the project at the local clone path and overrides `PROJECTS_DIRECTORY`):
+5. Start (on the server the repo lives at `/srv/stacks`; on a local/dev machine use `compose.dev.yml`, which remounts the project at the local clone path and overrides `PROJECTS_DIRECTORY`):
 
     ```sh
     # server
     docker compose up -d
 
-    # laptop / dev
+    # local / dev
     docker compose -f compose.yml -f compose.dev.yml up -d
     ```
 
@@ -55,5 +55,5 @@ Arcane Docker manager. Web UI on host port `10000` (container 3552, Arcane's nat
 - `cgroup: host` is required for container-ID detection / self-upgrades.
 - `ENCRYPTION_KEY` is stored in `.env` (untracked); losing it locks the Arcane database.
 - `./data/:/app/data` holds the Arcane DB and project metadata — back it up.
-- Project management requires matched absolute paths, hence the `/srv/stacks:/srv/stacks` mount + `PROJECTS_DIRECTORY=/srv/stacks`.
+- Project management requires matched absolute paths, hence the `/srv/stacks:/srv/stacks` mount + `PROJECTS_DIRECTORY=/srv/stacks` (overridden by `compose.dev.yml` on local/dev machines).
 - **Security:** Arcane's `PUID` only governs files *Arcane itself* creates — the stacks it manages run as whatever their own compose files say. Because Arcane holds the Docker socket (root-equivalent), `PUID` scoping does not protect Arcane itself: keep host port `10000` off the public internet (VPN/Tailscale only) and guard `ENCRYPTION_KEY`.

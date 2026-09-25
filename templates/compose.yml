@@ -15,5 +15,5 @@ services:
       start_period: 15s
     restart: unless-stopped
     stop_grace_period: 30s
-    mem_limit: 512m                      # CHANGE: size to the app
-    cpus: 0.5                            # CHANGE: size to the app
+    mem_limit: 2g                        # CHANGE: pick a tier from templates/README.md (0.5cpus/2gb, 1cpu/4gb, 3cpus/8gb, 6cpus/16gb, 12cpus/32gb)
+    cpus: 0.5

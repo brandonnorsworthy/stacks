@@ -4,7 +4,12 @@ Copy this folder's `compose.yml` and `.env.example` for every new stack and chan
 
 ## Rules
 
-- Always set `mem_limit` and `cpus`.
+- Always set `mem_limit` and `cpus`. Pick the tier that fits the service — these are the only allowed values:
+  - `0.5` cpus / `2gb` — very simple services.
+  - `1` cpu / `4gb` if it can't get away with less.
+  - `3` cpus / `8gb` — websites / APIs.
+  - `6` cpus / `16gb` — game servers; bump up only if needed.
+  - `12` cpus / `32gb` — reserved for absolutely heavy stuff (e.g. ollama, extremely modded Minecraft).
 - Persistent data goes in `./data`. Named volumes are fine for databases.
 - No `networks:` unless the app needs the database or LLM network.
 - Pin image versions.

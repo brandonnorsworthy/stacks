@@ -20,5 +20,5 @@ services:
       start_period: 15s
     restart: unless-stopped
     stop_grace_period: 30s
-    mem_limit: 512m
+    mem_limit: 4g
     cpus: 1.0
