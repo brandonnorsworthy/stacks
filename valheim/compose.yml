@@ -1,0 +1,17 @@
+services:
+  valheim:
+    container_name: valheim
+    image: lloesche/valheim-server:sha-e36cbfb0ddc8
+    env_file: .env
+    # Valheim's well-known Steam game ports (UDP). 2457 = query, 2458 = RPC/crossplay.
+    ports:
+      - "2456-2458:2456-2458/udp"
+    volumes:
+      - ./data/config:/config          # worlds, mods, backups (./data persists)
+      - ./data/opt-valheim:/opt/valheim  # cached server binaries (skip re-download)
+    cap_add:
+      - sys_nice
+    restart: unless-stopped
+    stop_grace_period: 30s
+    mem_limit: 16g
+    cpus: 6.0
