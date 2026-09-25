@@ -1,0 +1,16 @@
+services:
+  arcane:
+    container_name: arcane
+    image: ghcr.io/getarcaneapp/manager:v1.19.4
+    env_file: .env
+    ports:
+      - "3552:3552"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./data:/app/data
+    # host cgroup namespace so Arcane can detect its own container ID (self-upgrades)
+    cgroup: host
+    restart: unless-stopped
+    stop_grace_period: 30s
+    mem_limit: 512m
+    cpus: 1.0
