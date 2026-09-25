@@ -33,19 +33,7 @@ These rules are enforced for AI agents via [AGENTS.md](AGENTS.md).
 
 ## New stacks
 
-Start every new stack from the central template in [templates/](templates/) (`compose.yml` + `.env.example`) and change the values marked `CHANGE`. Rules:
-
-- Always set `mem_limit` and `cpus`.
-- Persistent data goes in `./data`. Named volumes are fine for databases.
-- No `networks:` unless the app needs the database or LLM network.
-- Pin image versions.
-- `.env.example` holds placeholders only; copy to `.env`, which is never committed.
-
-## Port allocation
-
-- Well-known app ports are fine (e.g. Minecraft `25565`, Palworld `8211`).
-- Anything that doesn't truly need a default port gets allocated from the managed range starting at `10000`, incrementing by `10` per reserved service: `10000`, `10010`, `10020`, … (allows up to 10 services per stack to share a host port block if needed).
-- When adding a new compose file or container, claim the next free slot in that sequence and record the allocation in the stack's `README.md` so ports stay easy to manage and never collide.
+Start every new stack from the central template in [templates/](templates/) and follow all the rules documented in [templates/README.md](templates/README.md) — compose conventions (limits, data dirs, pinned images), the `.env.example`/`.env` workflow, and the managed port allocation scheme (well-known app ports are fine; otherwise claim the next free slot from `10000`, incrementing by `10` per service). Change the values marked `CHANGE`.
 
 ## Environment variables: `.env.example` and `.env`
 
