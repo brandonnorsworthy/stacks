@@ -1,0 +1,11 @@
+{
+  "name": "claude-sandbox",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:22",
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/git:1": {}
+  },
+  "forwardPorts": [5173],
+  "postCreateCommand": "curl -fsSL https://claude.ai/install.sh | bash",
+  "remoteUser": "node"
+}
