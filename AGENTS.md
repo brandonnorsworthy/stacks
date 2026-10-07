@@ -15,6 +15,10 @@ Rules for AI agents (and humans) working in this repo.
 
 Create new stacks from the central template at [`templates/`](templates/README.md) (`compose.yml` + `.env.example`), and follow **all** rules documented in `templates/README.md` (compose conventions, env files, and the managed port allocation scheme). Change the values marked `CHANGE`.
 
+## Migrating existing deployments
+
+When moving something already running on the server into this repo, follow [MIGRATION.md](MIGRATION.md): pull published images only (no `build:`), preserve runtime behavior, normalize shape to the template.
+
 ## Security
 
 - No image may be built with baked-in production env settings (secrets, API keys, DSNs) that create security vulnerabilities; env must come from the host at runtime.

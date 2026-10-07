@@ -35,6 +35,10 @@ These rules are enforced for AI agents via [AGENTS.md](AGENTS.md).
 
 Start every new stack from the central template in [templates/](templates/) and follow all the rules documented in [templates/README.md](templates/README.md) — compose conventions (limits, data dirs, pinned images), the `.env.example`/`.env` workflow, and the managed port allocation scheme (well-known app ports are fine; otherwise claim the next free slot from `10000`, incrementing by `10` per service). Change the values marked `CHANGE`.
 
+## Migrating existing deployments
+
+Anything already running on the server (ad-hoc composes, repos that build on the box) moves into this repo following [MIGRATION.md](MIGRATION.md): stacks only pull images and define composes, runtime behavior is preserved, and the shape is aligned to the template.
+
 ## Environment variables: `.env.example` and `.env`
 
 Every stack has an `.env.example` committed to git. It documents which environment variables the stack needs (names and what they mean) using placeholder values — it is **never** the actual secret values.
