@@ -1,0 +1,18 @@
+services:
+  todomcp:
+    container_name: todomcp
+    image: ghcr.io/brandonnorsworthy/todomcp:latest   # TODO: pin to a specific tag/sha after first push (AGENTS.md: pin image versions)
+    user: "10004:65534"                                # dedicated stack UID (10001 arcane, 10002 valheim, 10003 postgres); nogroup GID
+    env_file: .env
+    ports:
+      - "10010:8080"                                   # next free slot after arcane's 10000
+    healthcheck:
+      test: ['CMD', 'curl', '-fsS', 'http://localhost:8080/health']
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 15s
+    restart: unless-stopped
+    stop_grace_period: 30s
+    mem_limit: 2g                                      # 0.5cpus/2gb tier (very simple service)
+    cpus: 0.5

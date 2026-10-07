@@ -1,0 +1,34 @@
+# todomcp
+
+Homelab's Todo MCP server — a `.NET 10` service that speaks the Model Context Protocol over Streamable HTTP. Lets LibreChat (backed by Ollama) drive todo tools with no human in the loop. Phase 1 exposes a single `get_flag` tool that returns a known secret string, proving the whole MCP round-trip.
+
+Source: [`brandonnorsworthy/todomcp`](https://github.com/brandonnorsworthy/todomcp) (build + push via GitHub Actions in that repo — `stacks` never builds).
+
+## Allocations
+
+- Port: `10010` (next free slot after arcane's `10000`; container listens on `8080`)
+- UID/GID: `10004:65534` (dedicated stack UID per `AGENTS.md`; `10001` arcane, `10002` valheim, `10003` postgres, `10004` = this)
+- Tier: `0.5` cpus / `2gb` (very simple service)
+- Image: `ghcr.io/brandonnorsworthy/todomcp:latest` — **pin to a specific tag/sha** after the first push (per `templates/README.md` rule "Pin image versions")
+
+## Env
+
+See `.env.example`. The only knob is `TODOMCP_FLAG` — overrides the string returned by the `get_flag` tool. Leave unset to keep the Phase-1 acceptance value.
+
+## Verify (from the server, once pulled)
+
+```
+curl -fSs http://localhost:10010/health
+curl -fSs -X POST http://localhost:10010/mcp \
+  -H 'Content-Type: application/json' -H 'Accept: application/json, text/event-stream' \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}'
+curl -fSs -X POST http://localhost:10010/mcp \
+  -H 'Content-Type: application/json' -H 'Accept: application/json, text/event-stream' \
+  -d '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"get_flag","arguments":{}}}'
+```
+
+Last line must return the configured flag (default `FLAG-lightbulb-1234`).
+
+## Deviations
+
+- **`image:` tag is `:latest`** until the first GHCR push pins a version. This violates the "pin image versions" template rule on purpose: nothing to pin yet, and the alternative (hardcoding a sha that doesn't exist) is worse. Revisit after first deployment.
