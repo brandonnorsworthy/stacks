@@ -1,5 +1,6 @@
-# Laptop/dev override — server path is /srv/stacks (see compose.yml).
+# local dev override — server path is /srv/stacks (see compose.yml).
 # Usage: docker compose -f compose.yml -f compose.dev.yml up -d
+# (from docs default login) arcane / arcane-admin
 services:
   arcane:
     environment:
