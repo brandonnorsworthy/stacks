@@ -1,0 +1,31 @@
+services:
+  postgres:
+    container_name: postgres             # other apps connect by this hostname
+    image: postgres:16.15                # pinned to the exact running version (verified 16.15)
+    env_file: .env
+    user: "10003:65534"                  # dedicated stack UID; the data volume must be chowned to it (see README)
+    ports:
+      - "127.0.0.1:5432:5432"              # host-local only (admin tools); apps use the postgres network
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-postgres}"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 20s
+    restart: unless-stopped
+    stop_grace_period: 120s              # lets Postgres flush and shut down cleanly
+    mem_limit: 4g
+    cpus: 1
+    networks:
+      - postgres
+
+volumes:
+  postgres:
+    external: true
+    name: postgres
+
+networks:
+  postgres:
+    external: true
