@@ -9,7 +9,7 @@ Source: [`brandonnorsworthy/todomcp`](https://github.com/brandonnorsworthy/todom
 - Port: `10010` (next free slot after arcane's `10000`; container listens on `8080`)
 - UID/GID: `10004:65534` (dedicated stack UID per `AGENTS.md`; `10001` arcane, `10002` valheim, `10003` postgres, `10004` = this)
 - Tier: `0.5` cpus / `2gb` (very simple service)
-- Image: `ghcr.io/brandonnorsworthy/todomcp:0.3.0` (pinned)
+- Image: `ghcr.io/brandonnorsworthy/todomcp:0.3.1` (pinned)
 
 ## Env
 
