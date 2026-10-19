@@ -1,0 +1,24 @@
+services:
+  whisper:
+    container_name: whisper
+    image: ghcr.io/speaches-ai/speaches:0.8.3-cuda
+    user: "10006:1000"                   # dedicated stack UID; GID 1000 is the image's own group (its Python lives in a 750 home dir, so nogroup cannot run it)
+    env_file: .env
+    environment:
+      HF_HOME: /data/huggingface         # model cache; must be writable by the stack UID
+    devices:
+      - nvidia.com/gpu=all               # NVIDIA GPU via CDI (needs nvidia-container-toolkit CDI spec)
+    ports:
+      - "10030:8000"                     # next free slot after librechat's 10020
+    volumes:
+      - ./data:/data
+    healthcheck:
+      test: ['CMD', 'curl', '-fsS', 'http://localhost:8000/health']
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 60s
+    restart: unless-stopped
+    stop_grace_period: 30s
+    mem_limit: 8g                        # 3cpus/8gb tier (Whisper on GPU; CPU only feeds it)
+    cpus: 3
