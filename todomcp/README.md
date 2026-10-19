@@ -1,6 +1,6 @@
 # todomcp
 
-Homelab's Todo MCP server — a `.NET 10` service that speaks the Model Context Protocol over Streamable HTTP. Lets LibreChat (backed by Ollama) drive todo tools with no human in the loop. Tools: `get_flag`, `add_todo`, `list_todos`, `complete_todo`, `delete_todo`; todos live in the shared Postgres (`todomcp_db`, roles `todomcp_migrator`/`todomcp_app`, joined via the external `postgres` network).
+Homelab's Todo MCP server — a `.NET 10` service that speaks the Model Context Protocol over Streamable HTTP. Lets LibreChat (backed by Ollama) drive todo tools with no human in the loop. Tools: `get_flag`, `add_todo`, `list_todos`, `next_todo`, `move_todo`, `complete_todo`, `delete_todo`, `list_projects`; todos live in the shared Postgres (`todomcp_db`, roles `todomcp_migrator`/`todomcp_app`, joined via the external `postgres` network).
 
 Source: [`brandonnorsworthy/todomcp`](https://github.com/brandonnorsworthy/todomcp) (build + push via GitHub Actions in that repo — `stacks` never builds).
 
@@ -9,7 +9,7 @@ Source: [`brandonnorsworthy/todomcp`](https://github.com/brandonnorsworthy/todom
 - Port: `10010` (next free slot after arcane's `10000`; container listens on `8080`)
 - UID/GID: `10004:65534` (dedicated stack UID per `AGENTS.md`; `10001` arcane, `10002` valheim, `10003` postgres, `10004` = this)
 - Tier: `0.5` cpus / `2gb` (very simple service)
-- Image: `ghcr.io/brandonnorsworthy/todomcp:0.2.0` (pinned)
+- Image: `ghcr.io/brandonnorsworthy/todomcp:0.3.0` (pinned)
 
 ## Env
 

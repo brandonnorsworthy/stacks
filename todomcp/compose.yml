@@ -1,7 +1,7 @@
 services:
   todomcp:
     container_name: todomcp
-    image: ghcr.io/brandonnorsworthy/todomcp:0.2.0     # pinned to v0.2.0 (bump deliberately; :latest tracks main)
+    image: ghcr.io/brandonnorsworthy/todomcp:0.3.0     # pinned to v0.3.0 (bump deliberately; :latest tracks main)
     user: "10004:65534"                                # dedicated stack UID (10001 arcane, 10002 valheim, 10003 postgres); nogroup GID
     env_file: .env
     ports:
