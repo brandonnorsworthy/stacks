@@ -53,6 +53,19 @@ Workflow when a stack needs new/changed variables:
 
 This keeps secrets out of git while still keeping a single source of truth for *which* variables every stack expects.
 
+### `.env` file permissions (Arcane must be able to read it)
+
+Arcane runs as UID `10001` (GID `65534`) and disables compose actions for any stack whose `.env` it can't read ("Arcane cannot read .../.env"). When creating or locking down a `.env`:
+
+- Match the existing stacks: owner `10001:65534`, mode `660`, plus an ACL entry so the host user can still edit it:
+  ```
+  sudo chown 10001:65534 <stack>/.env
+  setfacl -m u:brandon:rw <stack>/.env
+  chmod 660 <stack>/.env
+  ```
+- **Never `chmod 600`** a file that has ACL entries. On ACL files `chmod` sets the ACL *mask*, so `600` makes the mask `---` and silently cancels every ACL grant (including Arcane's), even though `getfacl` still lists them.
+- To diagnose or repair: `getfacl <stack>/.env` (look for `#effective:---`), then `setfacl -m m::rw <stack>/.env`.
+
 ## Deployment
 
 This repo is cloned onto my home-lab Ubuntu server at `/srv/stacks`. Arcane watches the repo and handles running the stacks — deploys, restarts, scaling — so there's no manual `docker compose up -d` SSH work.
