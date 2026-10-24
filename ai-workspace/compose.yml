@@ -1,0 +1,46 @@
+services:
+  ai-workspace:
+    container_name: ai-workspace
+    image: ghcr.io/brandonnorsworthy/ai-workspace:0.1.0   # pinned (bump deliberately; :latest tracks main)
+    user: "10007:65534"                                   # dedicated stack UID (10006 whisper); nogroup GID
+    env_file: .env
+    environment:
+      PGHOST: db                                          # sandbox Postgres below; psql and Npgsql/libpq pick these up
+      PGUSER: postgres
+      PGDATABASE: postgres
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./data:/data                                      # home, caches, agent logins, and the workspace itself
+    healthcheck:
+      test: ['CMD', 'git', '--version']
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+    stop_grace_period: 30s
+    mem_limit: 8g                                         # 3cpus/8gb tier (dotnet builds + node tooling)
+    cpus: 3
+
+  # Throwaway Postgres for the AI to test APIs and migrations against. Private to this stack:
+  # no published port, no shared network, no auth (reachable only from ai-workspace).
+  db:
+    container_name: ai-workspace-db
+    image: postgres:16.15                                 # same major as the shared server
+    user: "10007:65534"                                   # shared stack UID; ./data/postgres must be owned by it
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 20s
+    restart: unless-stopped
+    stop_grace_period: 60s
+    mem_limit: 4g                                         # 1cpu/4gb tier
+    cpus: 1
