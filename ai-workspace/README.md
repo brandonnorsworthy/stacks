@@ -12,7 +12,7 @@ Source: [`brandonnorsworthy/ai-workspace`](https://github.com/brandonnorsworthy/
 - UID/GID: `10007:65534` (dedicated stack UID per `AGENTS.md`; `10006` whisper, `10007` = this)
 - Tier: `3` cpus / `8gb` for `ai-workspace` (dotnet builds, node tooling); `1` cpu / `4gb` for `db`
 - Services: `ai-workspace` and `db` (sandbox Postgres) share UID `10007`
-- Image: `ghcr.io/brandonnorsworthy/ai-workspace:0.1.0` (pinned; the tag exists once `v0.1.0` is released from the image repo)
+- Image: `ghcr.io/brandonnorsworthy/ai-workspace:sha-c344118` (pinned to the first commit build, which lacks the `psql` client; switch to `0.1.0` once `v0.1.0` is released)
 
 ## First-time setup
 

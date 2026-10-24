@@ -1,7 +1,7 @@
 services:
   ai-workspace:
     container_name: ai-workspace
-    image: ghcr.io/brandonnorsworthy/ai-workspace:0.1.0   # pinned (bump deliberately; :latest tracks main)
+    image: ghcr.io/brandonnorsworthy/ai-workspace:sha-c344118   # pinned to a commit build until v0.1.0 is tagged (then switch to 0.1.0)
     user: "10007:65534"                                   # dedicated stack UID (10006 whisper); nogroup GID
     env_file: .env
     environment:
