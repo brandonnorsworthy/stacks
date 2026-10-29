@@ -1,0 +1,20 @@
+# Read-only access to the shared dev Postgres. ${DB_PASSWORD} is interpolated from the container env.
+[[sources]]
+id = "digitalhearthdb"
+dsn = "postgres://mcp_readonly:${DB_PASSWORD}@postgres:5432/digitalhearthdb?sslmode=disable"
+
+[[sources]]
+id = "todomcp_db"
+dsn = "postgres://mcp_readonly:${DB_PASSWORD}@postgres:5432/todomcp_db?sslmode=disable"
+
+[[tools]]
+name = "execute_sql"
+source = "digitalhearthdb"
+readonly = true
+max_rows = 500
+
+[[tools]]
+name = "execute_sql"
+source = "todomcp_db"
+readonly = true
+max_rows = 500

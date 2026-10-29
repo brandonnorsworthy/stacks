@@ -1,0 +1,21 @@
+services:
+  dbhub:
+    container_name: dbhub
+    image: bytebase/dbhub:1.5.0                        # pinned (bump deliberately; :latest floats)
+    user: "10006:65534"                                # dedicated stack UID (10005 = librechat)
+    env_file: .env
+    command: ["--transport", "http", "--port", "8080", "--config", "/app/dbhub.toml", "--allowed-hosts", "localhost,127.0.0.1,dbhub,dbhub:8080"]
+    ports:
+      - "127.0.0.1:10040:8080"                         # host-local only (DBHub has no auth); LibreChat joins the postgres network instead
+    volumes:
+      - ./dbhub.toml:/app/dbhub.toml:ro
+    restart: unless-stopped
+    stop_grace_period: 30s
+    mem_limit: 512m                                    # 0.5cpus/512mb (tiny stateless service)
+    cpus: 0.5
+    networks:
+      - postgres
+
+networks:
+  postgres:
+    external: true

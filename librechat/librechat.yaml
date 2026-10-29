@@ -26,9 +26,14 @@ speech:
 mcpSettings:
   allowedAddresses:
     - 'host.docker.internal:10010'   # todomcp
+    - 'dbhub:8080'                   # dbhub (read-only dev Postgres, via the postgres network)
 
 mcpServers:
   todomcp:
     type: streamable-http
     url: http://host.docker.internal:10010/mcp
+    timeout: 30000
+  dbhub:
+    type: streamable-http
+    url: http://dbhub:8080/mcp
     timeout: 30000

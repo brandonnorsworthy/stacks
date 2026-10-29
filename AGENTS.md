@@ -15,6 +15,10 @@ Rules for AI agents (and humans) working in this repo.
 
 Create new stacks from the central template at [`templates/`](templates/README.md) (`compose.yml` + `.env.example`), and follow **all** rules documented in `templates/README.md` (compose conventions, env files, and the managed port allocation scheme). Change the values marked `CHANGE`.
 
+## Testing a new or changed stack
+
+Not done until it has been started from the Arcane web UI in a browser (using the on-screen buttons) and, if it is a usable service, fully tested (browser preferred, otherwise direct POC calls). Follow rule 6 in [../docs/server-standards.md](../docs/server-standards.md) and the notes in [../docs/sites/arcane.md](../docs/sites/arcane.md), and add anything new you learn about the site there. The same applies to any other site you drive: see [../docs/sites/README.md](../docs/sites/README.md).
+
 ## Migrating existing deployments
 
 When moving something already running on the server into this repo, follow [MIGRATION.md](MIGRATION.md): pull published images only (no `build:`), preserve runtime behavior, normalize shape to the template.

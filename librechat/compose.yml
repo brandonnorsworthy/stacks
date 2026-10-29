@@ -16,6 +16,9 @@ services:
         condition: service_started
     extra_hosts:
       - "host.docker.internal:host-gateway"   # reach Ollama / todomcp published on the host
+    networks:
+      - default
+      - postgres                           # reach the dbhub MCP server
     ports:
       - "10020:3080"
     volumes:
@@ -90,3 +93,7 @@ volumes:
   librechat:                 # one volume, per-service subpaths: mongo, meili, images, uploads, logs
     external: true
     name: librechat
+
+networks:
+  postgres:
+    external: true
