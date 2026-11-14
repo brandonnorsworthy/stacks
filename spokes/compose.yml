@@ -1,0 +1,20 @@
+services:
+  spokes:
+    container_name: spokes
+    image: ghcr.io/brandonnorsworthy/spokes:0.1.0    # pinned (bump deliberately; :latest tracks main)
+    user: "10010:65534"                               # dedicated stack UID (10009 = python-sandbox); nogroup GID; ./data must be owned by it
+    env_file: .env
+    ports:
+      - "10050:8787"                                  # next free slot after dbhub's 10040; container listens on 8787
+    volumes:
+      - ./data:/data                                  # SQLite database (spokes.db + WAL) and backups/
+    healthcheck:
+      test: ['CMD', '/usr/local/bin/spokes', 'healthcheck']   # distroless image: no shell or curl, the binary probes /health
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 15s
+    restart: unless-stopped
+    stop_grace_period: 30s
+    mem_limit: 2g                                     # 0.5cpus/2gb tier (very simple service)
+    cpus: 0.5
