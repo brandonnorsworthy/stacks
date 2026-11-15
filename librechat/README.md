@@ -1,6 +1,8 @@
 # librechat
 
-LibreChat web UI (API + client) backed by the self-hosted Ollama server, with MongoDB and Meilisearch (chat search). Registers the `todomcp` stack as an MCP server.
+LibreChat web UI (API + client) backed by the self-hosted Ollama server, with MongoDB and Meilisearch (chat search). Registers MCP servers: `todomcp`, `dbhub` (over the `postgres` network) `browser` (`stacks/playwright-mcp`, over the external `mcp` network; create it once with `docker network create mcp`) and `python` (`stacks/python-sandbox`, over the external internal-only `mcp-internal` network; `docker network create --internal mcp-internal`) and `spokes` (the production Spokes to-do MCP on the server, `http://192.168.5.100:10050/mcp`, over the LAN).
+
+Context window: `librechat.yaml` sets `tokenConfig` for `qwen3.8:27b` (`context: 262144`) because LibreChat assumes 32k for models it doesn't know; Ollama itself already serves it at 262144.
 
 ## Allocations
 

@@ -15,6 +15,11 @@ endpoints:
       titleConvo: true
       titleModel: 'current_model'
       modelDisplayLabel: 'Ollama'
+      tokenConfig:                   # LibreChat assumes a 32k window for models it doesn't know
+        'qwen3.8:27b':
+          prompt: 0                  # $/1M tokens (self-hosted, free)
+          completion: 0
+          context: 262144            # 256k, matches the model's context_length in Ollama
 
 speech:
   stt:
@@ -27,6 +32,9 @@ mcpSettings:
   allowedAddresses:
     - 'host.docker.internal:10010'   # todomcp
     - 'dbhub:8080'                   # dbhub (read-only dev Postgres, via the postgres network)
+    - 'playwright-mcp:8931'          # headless browser (via the mcp network)
+    - 'python-sandbox:3001'          # Python sandbox (via the internal-only mcp-internal network)
+    - '192.168.5.100:10050'          # Spokes to-do MCP (production, on the server)
 
 mcpServers:
   todomcp:
@@ -36,4 +44,16 @@ mcpServers:
   dbhub:
     type: streamable-http
     url: http://dbhub:8080/mcp
+    timeout: 30000
+  browser:
+    type: streamable-http
+    url: http://playwright-mcp:8931/mcp
+    timeout: 120000
+  python:
+    type: streamable-http
+    url: http://python-sandbox:3001/mcp
+    timeout: 120000
+  spokes:
+    type: streamable-http
+    url: http://192.168.5.100:10050/mcp
     timeout: 30000

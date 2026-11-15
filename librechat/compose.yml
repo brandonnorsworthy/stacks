@@ -19,6 +19,8 @@ services:
     networks:
       - default
       - postgres                           # reach the dbhub MCP server
+      - mcp                                # reach the playwright-mcp browser server
+      - mcp-internal                       # reach the python-sandbox MCP server (no route out)
     ports:
       - "10020:3080"
     volumes:
@@ -96,4 +98,8 @@ volumes:
 
 networks:
   postgres:
+    external: true
+  mcp:
+    external: true
+  mcp-internal:
     external: true
