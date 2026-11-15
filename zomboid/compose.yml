@@ -1,0 +1,40 @@
+services:
+  zomboid:
+    container_name: zomboid
+    image: danixu86/project-zomboid-dedicated-server:42.21-release-2
+    env_file: .env
+    # The image's entrypoint must start as root (it chowns the data folders and runs
+    # steamcmd), then drops to its `steam` user, which is UID 1000 in the image. This
+    # wrapper renumbers `steam` to the stack's dedicated UID/GID (10011:65534) first, so
+    # the game server itself runs as 10011. See README.md.
+    entrypoint:
+      - /bin/bash
+      - -c
+      - |
+        set -e
+        sed -i 's/^steam:x:1000:1000:/steam:x:10011:65534:/' /etc/passwd
+        sed -i 's/^steam:x:1000:/steam:x:65534:/' /etc/group
+        chmod 755 /home/steam   # owner stays 1000: steamcmd fails (error 13) if this folder is re-owned
+        chown -R 10011:65534 /home/steam/Steam
+        # must exist before the image entrypoint chowns it, or mod downloads fail (result=37)
+        mkdir -p /home/steam/pz-dedicated/steamapps/workshop
+        exec /server/scripts/entry.sh
+    # Project Zomboid's well-known UDP ports (16261 game, 16262 direct connection).
+    # Both come from .env so the dev PC can run on other ports; the server listens on
+    # the same numbers inside the container.
+    ports:
+      - "${PORT:-16261}:${PORT:-16261}/udp"
+      - "${UDPPORT:-16262}:${UDPPORT:-16262}/udp"
+    volumes:
+      - ./data/Zomboid:/home/steam/Zomboid            # world, config, logs, player db
+      - ./data/pz-dedicated:/home/steam/pz-dedicated  # game install + workshop mods (keeps the game version fixed)
+    healthcheck:
+      test: ['CMD-SHELL', 'nc -z -u -w 2 127.0.0.1 $${PORT:-16261} || exit 1']
+      interval: 2m
+      timeout: 3s
+      retries: 5
+      start_period: 30m                  # first start downloads the ~7 GB game install
+    restart: unless-stopped
+    stop_grace_period: 120s              # entrypoint sends `quit` and waits for the world save
+    mem_limit: 16g                       # game-server tier
+    cpus: 6.0
