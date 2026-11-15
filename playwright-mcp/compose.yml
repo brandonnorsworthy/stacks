@@ -1,0 +1,23 @@
+services:
+  playwright-mcp:
+    container_name: playwright-mcp
+    image: mcr.microsoft.com/playwright/mcp:v0.0.83     # pinned (bump deliberately; :latest floats)
+    user: "10008:65534"                                 # dedicated stack UID (10007 = ai-workspace)
+    command: ["--headless", "--browser", "chromium", "--no-sandbox", "--isolated", "--port", "8931", "--host", "0.0.0.0", "--allowed-hosts", "*"]
+    ports:
+      - "127.0.0.1:8931:8931"                           # host-local only (no auth); Playwright's own default port. LibreChat joins the mcp network instead
+    tmpfs:
+      - /tmp
+    environment:
+      HOME: /tmp                                        # arbitrary UID has no home dir; --isolated keeps the profile in memory
+      PLAYWRIGHT_MCP_PING_TIMEOUT_MS: "0"               # 0 disables the server heartbeat. Default 5000 ms closes any session whose client doesn't answer pings; LibreChat's client never does, so every tool call died with "404 session lost"
+    restart: unless-stopped
+    stop_grace_period: 30s
+    mem_limit: 2g                                       # 0.5cpus/2gb (very simple service); Chromium may need more under heavy pages
+    cpus: 0.5
+    networks:
+      - mcp
+
+networks:
+  mcp:
+    external: true

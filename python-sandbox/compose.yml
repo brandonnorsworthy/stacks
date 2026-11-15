@@ -1,0 +1,33 @@
+services:
+  python-sandbox:
+    container_name: python-sandbox
+    image: ghcr.io/brandonnorsworthy/python-sandbox-mcp:0.1.0   # pinned; NOT YET PUBLISHED (tagged locally for testing, see README)
+    user: "10009:65534"                                # dedicated stack UID (10008 = playwright-mcp)
+    environment:
+      ALLOWED_HOSTS: "localhost:*,127.0.0.1:*,python-sandbox:*"   # Host headers accepted (DNS-rebinding guard)
+      SANDBOX_TIMEOUT_SECONDS: "10"
+      SANDBOX_MAX_TIMEOUT_SECONDS: "30"
+      SANDBOX_MEMORY_MB: "1024"
+      SANDBOX_MAX_CONCURRENCY: "2"
+    read_only: true                                    # nothing in the container is writable; each run gets its own tmpfs inside bwrap
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+      - seccomp=./seccomp.json                         # Docker's default profile + the namespace syscalls bubblewrap needs (see README)
+    pids_limit: 256
+    healthcheck:
+      test: ['CMD', 'curl', '-fsS', 'http://localhost:3001/health']
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 15s
+    restart: unless-stopped
+    stop_grace_period: 30s
+    mem_limit: 4g                                      # 1cpu/4gb tier (numpy/pandas jobs; each run is also capped at SANDBOX_MEMORY_MB)
+    cpus: 1
+    networks:
+      - mcp-internal
+
+networks:
+  mcp-internal:
+    external: true                                     # created with `docker network create --internal mcp-internal`; no route out
