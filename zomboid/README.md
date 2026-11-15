@@ -8,7 +8,7 @@ Project Zomboid (Build 42) dedicated server for playing in first person with Pro
 - Limits: `mem_limit: 16g`, `cpus: 6.0` (game-server tier). Java heap 2 to 8 GB (`MIN_MEMORY` / `MAX_MEMORY`).
 - Data (all under `./data`, gitignored):
   - `./data/Zomboid` → `/home/steam/Zomboid`: `Server/` (ini, SandboxVars, spawn files), `Saves/Multiplayer/<SERVERNAME>/` (the world), `db/<SERVERNAME>.db` (accounts), logs.
-  - `./data/pz-dedicated` → `/home/steam/pz-dedicated`: the game install and downloaded Workshop mods. Files here are owned by root (steamcmd), the workshop folder by 10011.
+  - `./data/pz-dedicated` → `/home/steam/pz-dedicated`: the game install and downloaded Workshop mods. Files here are owned by UID 1000 (steamcmd installs as the image's original `steam` UID even when root starts it; the game only reads them), the workshop folder by 10011.
 
 ## Mods
 

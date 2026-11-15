@@ -16,8 +16,12 @@ services:
         sed -i 's/^steam:x:1000:/steam:x:65534:/' /etc/group
         chmod 755 /home/steam   # owner stays 1000: steamcmd fails (error 13) if this folder is re-owned
         chown -R 10011:65534 /home/steam/Steam
-        # must exist before the image entrypoint chowns it, or mod downloads fail (result=37)
+        # The workshop folder must exist before the image entrypoint chowns it, or mod
+        # downloads fail (result=37). steamcmd installs the game as UID 1000 even when
+        # started by root, so the folders it writes to must stay owned by 1000, or the
+        # install fails with "Missing file permissions".
         mkdir -p /home/steam/pz-dedicated/steamapps/workshop
+        chown 1000:0 /home/steam/pz-dedicated /home/steam/pz-dedicated/steamapps
         exec /server/scripts/entry.sh
     # Project Zomboid's well-known UDP ports (16261 game, 16262 direct connection).
     # Both come from .env so the dev PC can run on other ports; the server listens on
