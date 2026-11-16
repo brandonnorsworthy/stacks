@@ -1,7 +1,7 @@
 services:
   spokes:
     container_name: spokes
-    image: ghcr.io/brandonnorsworthy/spokes:0.2.0    # pinned (bump deliberately; :latest tracks main)
+    image: ghcr.io/brandonnorsworthy/spokes:0.3.0    # pinned (bump deliberately; :latest tracks main)
     user: "10010:65534"                               # dedicated stack UID (10009 = python-sandbox); nogroup GID; ./data must be owned by it
     env_file: .env
     ports:
