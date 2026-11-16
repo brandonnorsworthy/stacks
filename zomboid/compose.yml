@@ -32,8 +32,12 @@ services:
     volumes:
       - ./data/Zomboid:/home/steam/Zomboid            # world, config, logs, player db
       - ./data/pz-dedicated:/home/steam/pz-dedicated  # game install + workshop mods (keeps the game version fixed)
+    # Healthy = the game server has bound its UDP game port, which happens at
+    # "*** SERVER STARTED ****" and goes away if it dies. The image has no nc/ss/ps, and a
+    # UDP probe proves nothing anyway, so read the kernel's socket table: the port in hex
+    # in the local_address column of /proc/net/udp (or udp6).
     healthcheck:
-      test: ['CMD-SHELL', 'nc -z -u -w 2 127.0.0.1 $${PORT:-16261} || exit 1']
+      test: ['CMD-SHELL', 'cat /proc/net/udp /proc/net/udp6 2>/dev/null | awk -v p=":$$(printf %04X $${PORT:-16261})" ''toupper($$2) ~ p"$$" {f=1} END {exit !f}''']
       interval: 2m
       timeout: 3s
       retries: 5
