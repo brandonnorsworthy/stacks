@@ -9,7 +9,7 @@ Source: [`brandonnorsworthy/spokes`](https://github.com/brandonnorsworthy/spokes
 - Port: `10050` -> container `8787` (next free slot after dbhub's `10040`), endpoints `/mcp`, `/api` (read-only JSON, from 0.2.0) and `/health`.
 - UID/GID: `10010:65534` (dedicated stack UID; `10009` = python-sandbox). This overrides the image's own `nonroot` user (65532), so `./data` must be owned by `10010`.
 - Tier: `0.5` cpus / `2gb` (very simple service).
-- Image: `ghcr.io/brandonnorsworthy/spokes:0.2.0` (pinned; bump deliberately, rollback = the previous tag).
+- Image: `ghcr.io/brandonnorsworthy/spokes:0.3.0` (pinned; bump deliberately, rollback = the previous tag).
 - Data: `./data` bind mount: `spokes.db` (+ `-wal`/`-shm`) and `backups/`.
 
 ## Start / stop
