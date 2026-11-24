@@ -33,7 +33,7 @@ See `.env.example`. No secrets: `SPOKES_TZ` (what "today" is for due dates, defe
 
 ## HTTPS name (LAN only)
 
-`https://spokes.zcog.net` reaches the same endpoints through host nginx's generic `*.zcog.net` vhost (wildcard cert, LAN sources only, buffering off for streaming). The DNS record lives in the `dns` repo and the nginx files in `docs/zcog.net/nginx/`. If you change `SPOKES_PORT`, regenerate the nginx map line. The plain `http://<server>:10050` address still works.
+`https://spokes.<domain>` reaches the same endpoints through host nginx's generic `*.<domain>` vhost (wildcard cert, LAN sources only, buffering off for streaming). The DNS record lives in the `dns` repo and the nginx files in `docs/<domain>/nginx/`. If you change `SPOKES_PORT`, regenerate the nginx map line. The plain `http://<server>:10050` address still works.
 
 ## Clients
 

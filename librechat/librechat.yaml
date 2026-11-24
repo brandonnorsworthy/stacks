@@ -4,11 +4,11 @@ cache: true
 # Needed so LibreChat's SSRF guard allows the self-hosted services below.
 endpoints:
   allowedAddresses:
-    - 'zcog.net:11434'   # Ollama
+    - '192.168.5.100:11434'   # Ollama
   custom:
     - name: 'Ollama'
       apiKey: 'ollama'               # Ollama ignores the key; LibreChat requires a value
-      baseURL: 'http://zcog.net:11434/v1/'
+      baseURL: 'http://192.168.5.100:11434/v1/'
       models:
         default: ['qwen3.8:27b']     # tool-calling capable (see ollama /api/tags)
         fetch: true                  # list whatever the Ollama server has

@@ -5,7 +5,7 @@ services:
     user: "10010:65534"                               # dedicated stack UID (10009 = python-sandbox); nogroup GID; ./data must be owned by it
     env_file: .env
     ports:
-      - "${SPOKES_PORT:-10050}:8787"                  # host port from .env (default 10050, the next free slot after dbhub's 10040); also read by docs/zcog.net/nginx/gen-map.sh
+      - "${SPOKES_PORT:-10050}:8787"                  # host port from .env (default 10050, the next free slot after dbhub's 10040); also read by the nginx map generator in the server docs
     volumes:
       - ./data:/data                                  # SQLite database (spokes.db + WAL) and backups/
     healthcheck:

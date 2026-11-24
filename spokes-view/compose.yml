@@ -5,7 +5,7 @@ services:
     user: "10012:65534"                                    # dedicated stack UID (10011 = zomboid); nogroup GID
     env_file: .env
     ports:
-      - "${SPOKES_VIEW_PORT:-10060}:8788"                  # host port from .env (default 10060, the next free slot after spokes' 10050); also read by docs/zcog.net/nginx/gen-map.sh
+      - "${SPOKES_VIEW_PORT:-10060}:8788"                  # host port from .env (default 10060, the next free slot after spokes' 10050); also read by the nginx map generator in the server docs
     read_only: true                                        # stateless: no volume, nothing to write
     healthcheck:
       test: ['CMD', '/usr/local/bin/spokes-view', 'healthcheck']   # distroless image: no shell or curl, the binary probes /health
