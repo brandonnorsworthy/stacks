@@ -1,0 +1,57 @@
+# Landing page (bookmarks home base) for the bare domain. Image: github.com/brandonnorsworthy/landing.
+# Two services from one image: a one-shot migration as landing_migrator, then the site as
+# landing_app. Each gets only its own connection string; passwords come from .env.
+services:
+  landing-migrate:
+    container_name: landing-migrate
+    image: ghcr.io/brandonnorsworthy/landing:0.2.3      # pinned; keep in step with `landing` below
+    command: ["migrate"]
+    user: "10014:65534"                                  # dedicated stack UID (10013 = norsworthy-discord-status)
+    environment:
+      ConnectionStrings__Migrator: "Host=postgres;Port=5432;Database=landing_db;Username=landing_migrator;Password=${LANDING_MIGRATOR_PASSWORD:?set in .env}"
+    networks:
+      - postgres
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    restart: "no"                                        # runs once per Up/Redeploy, then exits 0
+    mem_limit: 2g                                        # 0.5cpus/2gb tier
+    cpus: 0.5
+
+  landing:
+    container_name: landing
+    image: ghcr.io/brandonnorsworthy/landing:0.2.3      # pinned (bump deliberately; rollback = previous tag)
+    user: "10014:65534"
+    depends_on:
+      landing-migrate:
+        condition: service_completed_successfully       # never serve against an un-migrated schema
+    environment:
+      ConnectionStrings__App: "Host=postgres;Port=5432;Database=landing_db;Username=landing_app;Password=${LANDING_APP_PASSWORD:?set in .env}"
+      StatusChecker__IntervalSeconds: "${LANDING_CHECK_INTERVAL:-60}"
+    ports:
+      - "${LANDING_PORT:-10070}:8080"                    # host port (default 10070, next free slot after spokes-view's 10060); host nginx serves the bare domain over HTTPS from it
+    networks:
+      - postgres                                         # reaches stacks/postgres as `postgres`; also its route out for status checks
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    healthcheck:
+      test: ["CMD", "dotnet", "Landing.Api.dll", "healthcheck"]   # no curl in the image; the app probes its own /health (DB included)
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    restart: unless-stopped
+    stop_grace_period: 30s
+    mem_limit: 2g                                        # 0.5cpus/2gb tier (small site)
+    cpus: 0.5
+
+networks:
+  postgres:
+    external: true
