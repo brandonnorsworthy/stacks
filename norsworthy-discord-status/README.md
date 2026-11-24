@@ -9,7 +9,7 @@ Source: [`brandonnorsworthy/dn-norsworthy-discord-status`](https://github.com/br
 - Port: `3500` -> container `8080`. Kept from the old deployment instead of a `100x0` slot (see Migration notes). Endpoints: `/status.png` (the grid), `/status.png?container=<name>` (one card, whitelisted containers only), `/health`.
 - UID/GID: `10013:65534` (dedicated stack UID; `10012` = spokes-view). This overrides the image's own `app` user (1654), so `./data` must be owned by `10013`.
 - Tier: `0.5` cpus / `2gb` (very simple service).
-- Image: `ghcr.io/brandonnorsworthy/dn-norsworthy-discord-status:1.1.0` (pinned; bump deliberately, rollback = the previous tag).
+- Image: `ghcr.io/brandonnorsworthy/dn-norsworthy-discord-status:1.2.0` (pinned; bump deliberately, rollback = the previous tag).
 - Data: `./data` bind mount: `message-id.txt`, the id of the Discord message being edited. Delete it and the service posts a new message.
 - Network: external `norsworthy-net` (must exist before `Up`; `norsworthy-monitor` is on it).
 
@@ -66,3 +66,5 @@ Moved from `/srv/websites/dn-norsworthy-discord-status`, where the image was bui
 Tested on the dev PC (2026-11-15) with the published `1.0.0` image, started from the Arcane web UI (`Up`), with a local `norsworthy-net` network, `BASE_URL` pointed at the server's monitor over the LAN, and a test webhook: container `healthy` as `10013:65534` on `norsworthy-net`; `/health` 200; `/status.png` a 1280x1260 grid of six whitelisted servers (four online, two offline); `?container=arcane` (not whitelisted) 404; log `Message edited. ID: ...` and the test Discord message updated in place; no webhook URL in the logs. Stopped again with `Down`.
 
 Re-tested on the dev PC (2026-11-16) with the published `1.1.0` image (plain "up for N weeks" uptime and a green/red health heart), same method: `Up` from the dev Arcane UI, container `healthy` as `10013:65534`, `/health` 200, `/status.png` a 1280x1260 grid of six servers with hearts and "up for" text, `?container=arcane` 404, log `Message edited. ID: ...`. Stopped again with `Down`.
+
+Re-tested on the dev PC (2026-11-24) with the published `1.2.0` image (offline tiles collapsed to half height, two per tile slot), started from the dev Arcane UI (`Up`), with the full game-server whitelist against the live monitor: container `healthy` as `10013:65534`, `/health` 200, `/status.png` a 1920x1260 grid (4 online, 8 offline), `?container=atm11` 200, `?container=arcane` 404, log `Message edited. ID: ...`.

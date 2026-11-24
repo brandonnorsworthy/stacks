@@ -1,7 +1,7 @@
 services:
   norsworthy-discord-status:
     container_name: norsworthy-discord-status
-    image: ghcr.io/brandonnorsworthy/dn-norsworthy-discord-status:1.1.0   # pinned (bump deliberately; :latest tracks main)
+    image: ghcr.io/brandonnorsworthy/dn-norsworthy-discord-status:1.2.0   # pinned (bump deliberately; :latest tracks main)
     user: "10013:65534"                               # dedicated stack UID (10012 = spokes-view); nogroup GID; ./data must be owned by it
     env_file: .env
     ports:
