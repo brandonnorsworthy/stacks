@@ -28,6 +28,8 @@ Then start and stop the stack from Arcane (Up / Down). The healthcheck runs the 
 
 See `.env.example`. `DISCORD_WEBHOOK_URL` is a secret and lives only in the server's `.env`. `BASE_URL` is the monitor API, `CONTAINER_WHITELIST` the containers that get a tile (a name that matches no container gets none).
 
+**When you add a game server, add its container name to `CONTAINER_WHITELIST` in the server's `.env` and Redeploy this stack**, or it will not appear in the Discord message. Retired servers can stay listed: they show as dimmed Offline tiles.
+
 ## Verify (from the server)
 
 ```
