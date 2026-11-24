@@ -6,7 +6,8 @@ Source: [`brandonnorsworthy/spokes-view`](https://github.com/brandonnorsworthy/s
 
 ## Allocations
 
-- Port: `10060` -> container `8788` (next free slot after spokes' `10050`). The page is `/`, the probe is `/health`.
+- Port: `${SPOKES_VIEW_PORT:-10060}` -> container `8788` (default `10060`, the next free slot after spokes' `10050`). The page is `/`, the probe is `/health`.
+- HTTPS name (LAN only): `https://view.zcog.net`, through host nginx's generic `*.zcog.net` vhost (wildcard cert, LAN sources only). The DNS record is in the `dns` repo and the nginx files are in `docs/zcog.net/nginx/`. If you change `SPOKES_VIEW_PORT`, regenerate the nginx map line.
 - UID/GID: `10012:65534` (dedicated stack UID; `10011` = zomboid). Overrides the image's own `nonroot` user (65532).
 - Tier: `0.5` cpus / `2gb` (very simple service).
 - Image: `ghcr.io/brandonnorsworthy/spokes-view:0.2.0` (pinned; bump deliberately, rollback = the previous tag). 0.2.0 adds Replay.
