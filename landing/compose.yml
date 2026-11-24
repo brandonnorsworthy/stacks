@@ -34,6 +34,8 @@ services:
       - "${LANDING_PORT:-10070}:8080"                    # host port (default 10070, next free slot after spokes-view's 10060); host nginx serves the bare domain over HTTPS from it
     networks:
       - postgres                                         # reaches stacks/postgres as `postgres`; also its route out for status checks
+    dns:
+      - "${LANDING_DNS:-192.168.5.1}"                    # the LAN's resolver, so status checks and favicon lookups see local names the way LAN clients do (Docker's own DNS still resolves `postgres`)
     read_only: true
     tmpfs:
       - /tmp

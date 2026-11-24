@@ -6,6 +6,7 @@ The home page at the network's bare domain: central, device-independent bookmark
 
 - Port: `${LANDING_PORT:-10070}` -> container `8080` (default `10070`, the next free slot after spokes-view's `10060`). Host nginx serves the bare domain over HTTPS from it (LAN only).
 - UID/GID: `10014:65534` (dedicated stack UID; `10013` = norsworthy-discord-status). Both services run as it. No bind mounts: all data is in Postgres.
+- DNS: `${LANDING_DNS:-192.168.5.1}` (the LAN router). The server's own resolver gives public answers for local names, and the router doesn't loop those back, so checks would time out. Docker's embedded DNS still resolves `postgres`.
 - Tier: `0.5` cpus / `2gb` per service.
 - Image: `ghcr.io/brandonnorsworthy/landing:<version>`, pinned, the same tag on both services. Rollback = the previous tag (check the migration list first: EF Core migrations only move forward).
 - Database: `landing_db` on [`../postgres`](../postgres/README.md) over the external `postgres` network. Roles `landing_migrator` (owner, DDL, used only by `landing-migrate`) and `landing_app` (DML only, used by `landing`).
