@@ -6,7 +6,7 @@ Source: [`brandonnorsworthy/spokes`](https://github.com/brandonnorsworthy/spokes
 
 ## Allocations
 
-- Port: `10050` -> container `8787` (next free slot after dbhub's `10040`), endpoints `/mcp`, `/api` (read-only JSON, from 0.2.0) and `/health`.
+- Port: `${SPOKES_PORT:-10050}` -> container `8787` (default `10050`, the next free slot after dbhub's `10040`), endpoints `/mcp`, `/api` (read-only JSON, from 0.2.0) and `/health`.
 - UID/GID: `10010:65534` (dedicated stack UID; `10009` = python-sandbox). This overrides the image's own `nonroot` user (65532), so `./data` must be owned by `10010`.
 - Tier: `0.5` cpus / `2gb` (very simple service).
 - Image: `ghcr.io/brandonnorsworthy/spokes:0.3.0` (pinned; bump deliberately, rollback = the previous tag).
@@ -30,6 +30,10 @@ See `.env.example`. No secrets: `SPOKES_TZ` (what "today" is for due dates, defe
 ## Security
 
 `/mcp` and the read-only JSON API at `/api` (used by [spokes-view](../spokes-view/README.md), from 0.2.0) have no authentication; anyone who can reach port `10050` can read and change the to-dos. Requests with an `Origin` header are refused unless listed in `SPOKES_ALLOWED_ORIGINS` (blocks browser-driven attacks); MCP clients send none. Keep the port on the LAN (not forwarded through nginx to the internet) until auth exists.
+
+## HTTPS name (LAN only)
+
+`https://spokes.zcog.net` reaches the same endpoints through host nginx's generic `*.zcog.net` vhost (wildcard cert, LAN sources only, buffering off for streaming). The DNS record lives in the `dns` repo and the nginx files in `docs/zcog.net/nginx/`. If you change `SPOKES_PORT`, regenerate the nginx map line. The plain `http://<server>:10050` address still works.
 
 ## Clients
 
