@@ -16,6 +16,10 @@ Shared Postgres server for the homelab. Other stacks reach it by hostname `postg
 2. Confirm the real volume name with `docker volume ls` and set `name:` in `compose.yml`.
 3. Pin the image tag to the running version (`docker ps` / `docker inspect postgres`).
 
+## Fresh start on an empty volume
+
+The image declares the data directory as a VOLUME, so on the first container create Docker copies that directory's ownership (`999`, mode `1777`) onto an empty `postgres` volume, undoing any earlier `chown`; initdb as UID 10003 then fails with `could not change permissions`. After the first `Up`, run `docker run --rm -v postgres:/d busybox sh -c "chown 10003:65534 /d && chmod 700 /d"` once; the next restart initializes. Once the volume holds data this doesn't recur (seen on the server's first start, 2026-11-24).
+
 ## Cutover (from the old compose)
 
 1. `pg_dumpall` backup of everything.
