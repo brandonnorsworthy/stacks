@@ -9,12 +9,12 @@ Source: [`brandonnorsworthy/spokes-view`](https://github.com/brandonnorsworthy/s
 - Port: `10060` -> container `8788` (next free slot after spokes' `10050`). The page is `/`, the probe is `/health`.
 - UID/GID: `10012:65534` (dedicated stack UID; `10011` = zomboid). Overrides the image's own `nonroot` user (65532).
 - Tier: `0.5` cpus / `2gb` (very simple service).
-- Image: `ghcr.io/brandonnorsworthy/spokes-view:0.1.0` (pinned; bump deliberately, rollback = the previous tag).
+- Image: `ghcr.io/brandonnorsworthy/spokes-view:0.2.0` (pinned; bump deliberately, rollback = the previous tag). 0.2.0 adds Replay.
 - Data: none. No volume; the container filesystem is read-only.
 
 ## Needs
 
-Every server listed in `SPOKES_VIEW_SERVERS` must run Spokes `0.2.0` or later (the read-only `/api`). An older server shows "older than 0.2.0 and has no read API" in the page. If a Spokes server sets `SPOKES_ALLOWED_HOSTS`, it must include the host name or IP used in `SPOKES_VIEW_SERVERS`.
+Every server listed in `SPOKES_VIEW_SERVERS` must run Spokes `0.2.0` or later (the read-only `/api`). An older server shows "older than 0.2.0 and has no read API" in the page. Replay needs Spokes `0.4.0` or later; against an older server the button is disabled with that note and everything else works. If a Spokes server sets `SPOKES_ALLOWED_HOSTS`, it must include the host name or IP used in `SPOKES_VIEW_SERVERS`.
 
 ## Start / stop
 

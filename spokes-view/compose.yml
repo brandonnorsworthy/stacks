@@ -1,7 +1,7 @@
 services:
   spokes-view:
     container_name: spokes-view
-    image: ghcr.io/brandonnorsworthy/spokes-view:0.1.0   # pinned (bump deliberately; :latest tracks main)
+    image: ghcr.io/brandonnorsworthy/spokes-view:0.2.0   # pinned (bump deliberately; :latest tracks main)
     user: "10012:65534"                                    # dedicated stack UID (10011 = zomboid); nogroup GID
     env_file: .env
     ports:
