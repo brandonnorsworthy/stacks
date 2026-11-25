@@ -6,10 +6,10 @@ Source: [`brandonnorsworthy/spokes`](https://github.com/brandonnorsworthy/spokes
 
 ## Allocations
 
-- Port: `${SPOKES_PORT:-10050}` -> container `8787` (default `10050`, the next free slot after dbhub's `10040`), endpoints `/mcp`, `/api` (read-only JSON, from 0.2.0; `/api/history` for replay from 0.4.0, `/api/search` for the viewer's search box from 0.5.0) and `/health`.
+- Port: `${SPOKES_PORT:-10050}` -> container `8787` (default `10050`, the next free slot after dbhub's `10040`), endpoints `/mcp`, `/api` (read-only JSON, from 0.2.0; `/api/history` for replay from 0.4.0, `/api/search` for the viewer's search box from 0.5.0, `include_dropped` for its "Show dropped" box from 0.6.0) and `/health`.
 - UID/GID: `10010:65534` (dedicated stack UID; `10009` = python-sandbox). This overrides the image's own `nonroot` user (65532), so `./data` must be owned by `10010`.
 - Tier: `0.5` cpus / `2gb` (very simple service).
-- Image: `ghcr.io/brandonnorsworthy/spokes:0.5.0` (pinned; bump deliberately, rollback = the previous tag; 0.5.0 changed no stored data, so `0.4.0` is a clean rollback).
+- Image: `ghcr.io/brandonnorsworthy/spokes:0.6.1` (pinned; bump deliberately, rollback = the previous tag; 0.5.0 and 0.6.x changed no stored data, so `0.5.0` is a clean rollback). `0.6.0` was tagged but its release scan failed (base-image CVE) and it was never deployed; `0.6.1` carries the accepted, expiring exception (see `docs/projects.md`).
 - Data: `./data` bind mount: `spokes.db` (+ `-wal`/`-shm`) and `backups/`.
 
 ## Start / stop

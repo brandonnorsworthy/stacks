@@ -10,12 +10,12 @@ Source: [`brandonnorsworthy/spokes-view`](https://github.com/brandonnorsworthy/s
 - HTTPS name (LAN only): `https://view.<domain>`, through host nginx's generic `*.<domain>` vhost (wildcard cert, LAN sources only). The DNS record is in the `dns` repo and the nginx files are in `docs/<domain>/nginx/`. If you change `SPOKES_VIEW_PORT`, regenerate the nginx map line.
 - UID/GID: `10012:65534` (dedicated stack UID; `10011` = zomboid). Overrides the image's own `nonroot` user (65532).
 - Tier: `0.5` cpus / `2gb` (very simple service).
-- Image: `ghcr.io/brandonnorsworthy/spokes-view:0.3.0` (pinned; bump deliberately, rollback = the previous tag). 0.2.0 adds Replay, 0.3.0 adds search (find a node and jump to it).
+- Image: `ghcr.io/brandonnorsworthy/spokes-view:0.4.1` (pinned; bump deliberately, rollback = the previous tag). 0.2.0 adds Replay, 0.3.0 adds search (find a node and jump to it), 0.4.0 replaces "Show closed" with separate "Show done" and "Show dropped" boxes, both off by default (0.4.1 only adds the accepted base-image CVE exception).
 - Data: none. No volume; the container filesystem is read-only.
 
 ## Needs
 
-Every server listed in `SPOKES_VIEW_SERVERS` must run Spokes `0.2.0` or later (the read-only `/api`). An older server shows "older than 0.2.0 and has no read API" in the page. Replay needs Spokes `0.4.0` or later and search needs `0.5.0` or later; against an older server the button or search box is disabled with that note and everything else works. If a Spokes server sets `SPOKES_ALLOWED_HOSTS`, it must include the host name or IP used in `SPOKES_VIEW_SERVERS`.
+Every server listed in `SPOKES_VIEW_SERVERS` must run Spokes `0.2.0` or later (the read-only `/api`). An older server shows "older than 0.2.0 and has no read API" in the page. Replay needs Spokes `0.4.0` or later, search needs `0.5.0` or later and the done/dropped boxes need `0.6.0` or later (deploy Spokes first: an older one answers 400 and the page shows "the Spokes server answered 400"); against an older server the button or search box is disabled with that note and everything else works. If a Spokes server sets `SPOKES_ALLOWED_HOSTS`, it must include the host name or IP used in `SPOKES_VIEW_SERVERS`.
 
 ## Start / stop
 
