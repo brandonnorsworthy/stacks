@@ -10,7 +10,7 @@ Source: [`brandonnorsworthy/spokes-view`](https://github.com/brandonnorsworthy/s
 - HTTPS name (LAN only): `https://view.<domain>`, through host nginx's generic `*.<domain>` vhost (wildcard cert, LAN sources only). The DNS record is in the `dns` repo and the nginx files are in `docs/<domain>/nginx/`. If you change `SPOKES_VIEW_PORT`, regenerate the nginx map line.
 - UID/GID: `10012:65534` (dedicated stack UID; `10011` = zomboid). Overrides the image's own `nonroot` user (65532).
 - Tier: `0.5` cpus / `2gb` (very simple service).
-- Image: `ghcr.io/brandonnorsworthy/spokes-view:0.4.1` (pinned; bump deliberately, rollback = the previous tag). 0.2.0 adds Replay, 0.3.0 adds search (find a node and jump to it), 0.4.0 replaces "Show closed" with separate "Show done" and "Show dropped" boxes, both off by default (0.4.1 only adds the accepted base-image CVE exception).
+- Image: `ghcr.io/brandonnorsworthy/spokes-view:0.5.0` (pinned; bump deliberately, rollback = the previous tag). 0.5.0 adds a Source section (the user's raw words, from Spokes 0.7.0) to the detail panel; it shows nothing against an older Spokes. 0.2.0 adds Replay, 0.3.0 adds search (find a node and jump to it), 0.4.0 replaces "Show closed" with separate "Show done" and "Show dropped" boxes, both off by default (0.4.1 only adds the accepted base-image CVE exception).
 - Data: none. No volume; the container filesystem is read-only.
 
 ## Needs
